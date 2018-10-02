@@ -2,8 +2,6 @@
 
 require 'bundler/setup'
 require 'trello'
-require 'pry-byebug'
-require 'pp'
 
 # Script to generate a graphviz file from the parent/child card relationships
 # of a [trello](https://trello.com) board that uses the [HelloEpics](https://helloepics.com/) power-up
