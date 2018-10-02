@@ -10,8 +10,17 @@ require 'pp'
 
 BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 
-@labels = []
-@links  = {}
+@labels   = []
+@links    = {}
+@initials = {}
+
+# Depending on whether the card is in the Backlog/Doing/Done list,
+# we want the corresponding node to be red/orange/green.
+@list_colours = {
+  '5bb1e69730291b4a3e4891a4' => '{{{{ ID of backlog list }}}}',
+  '5bb1e69aaf5c8744a820ffe6' => '{{{{ ID of doing list }}}}',
+  '5bb1e69b64f1246441f6821a' => '{{{{ ID of done list }}}}'
+}
 
 def main
   walk_the_tree
@@ -39,7 +48,8 @@ EOF
 end
 
 def process_card(card)
-  @labels << %{"#{card.id}"    [label="#{card.name}", color="red"]}
+  label = label_string(card, @list_colours[card.list_id])
+  @labels << %{"#{card.id}"    #{label}}
 
   child_card_ids(card).each do |id|
     crd = Trello::Card.find(id)
@@ -47,6 +57,20 @@ def process_card(card)
     @links[key] = [id, card.id]
     process_card crd
   end
+end
+
+def label_string(card, colour)
+  initials = initials_for_card(card)
+  assignees = initials.any? ? %[\n(#{initials.join(',')})] : ''
+  str = "#{card.name}#{assignees}"
+  %{[label="#{str}", color="#{colour}"]}
+end
+
+def initials_for_card(card)
+  card.member_ids.each do |id|
+    @initials[id] ||= Trello::Member.find(id).initials
+  end
+  card.member_ids.map {|id| @initials[id]}
 end
 
 def child_card_ids(card)
