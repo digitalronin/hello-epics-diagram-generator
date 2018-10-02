@@ -1,2 +1,4 @@
 export TRELLO_API_KEY=your.api.key.goes.here   # https://trello.com/app-key
 export TRELLO_MEMBER_TOKEN=your.secret.token
+export USERNAME=foo
+export PASSWORD=bar

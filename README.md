@@ -33,7 +33,17 @@ them.
 * Visit [https://trello.com/app-key](https://trello.com/app-key) and generate Trello API credentials
 * `cp dotenv.example .env` - then edit .env to add your Trello API credentials
 
-## TODO
+## Server setup
 
-* Generate clickable diagram, with nodes linked to trello cards (SVG or html image-map)
-* Set up a hosted version that auto-generates the clickable diagram every N minutes
+* `make deploy`
+* Run `./setup-vps.sh` on the VM
+* Run `bundle install` on the VM
+* `make ssh`
+* `tmux`
+* Add this to crontab `*/5 * * * * cd /root; make`
+* Run the server
+```
+. .env
+rackup -o 0.0.0.0
+```
+* `Ctrl-B D` to disconnect from tmux

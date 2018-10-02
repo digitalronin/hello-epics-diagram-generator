@@ -1,11 +1,23 @@
-diagram.png: diagram.gv
-	dot -Tpng -Gdpi=300 diagram.gv -o diagram.png
-	open diagram.png
+# configured in ~/.ssh/config
+HOST := '{{{{ Your VPS name }}}'
+
+sync:
+	rm -f diagram.gv
+	make public/diagram.svg
+
+public/diagram.svg: diagram.gv
+	dot -Tsvg diagram.gv -o public/diagram.svg
 
 diagram.gv: graph-from-trello.rb
-	source .env; ./graph-from-trello.rb > diagram.gv
+	. ./.env; ./graph-from-trello.rb > diagram.gv
 
 clean:
-	rm diagram.*
+	rm -f diagram.* public/diagram.*
 
-.PHONY: clean
+deploy:
+	rsync -rv * $(HOST):
+
+ssh:
+	ssh $(HOST)
+
+.PHONY: clean sync deploy ssh
