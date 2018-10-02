@@ -21,10 +21,19 @@ diagram.png is out of date. Use `make clean` to delete
 all the `diagram.*` files, then run `make` to recreate
 them.
 
+## Requirements
+
+* [ruby](https://www.ruby-lang.org)
+* [bundler](https://bundler.io/)
+* [graphviz](https://www.graphviz.org/)
+
 ## Installation
 
 * `bundle install` - or your own variant of it
-
-* Visit https://trello.com/app-key and generate Trello API credentials
-
+* Visit [https://trello.com/app-key](https://trello.com/app-key) and generate Trello API credentials
 * `cp dotenv.example .env` - then edit .env to add your Trello API credentials
+
+## TODO
+
+* Generate clickable diagram, with nodes linked to trello cards (SVG or html image-map)
+* Set up a hosted version that auto-generates the clickable diagram every N minutes
