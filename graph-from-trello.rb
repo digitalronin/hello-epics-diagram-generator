@@ -8,7 +8,7 @@ require 'trello'
 
 BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 
-@labels   = []
+@attrs   = []
 @links    = {}
 @initials = {}
 
@@ -40,14 +40,14 @@ digraph G {
 
 EOF
 
-  puts @labels.join("\n")
+  puts @attrs.join("\n")
   @links.each {|_key, tuple| puts %["#{tuple[0]}" -> "#{tuple[1]}"]}
   puts "}"
 end
 
 def process_card(card)
-  label = label_string(card, @list_colours[card.list_id])
-  @labels << %{"#{card.id}"    #{label}}
+  attrs = node_attributes(card, @list_colours[card.list_id])
+  @attrs << %{"#{card.id}"    #{attrs}}
 
   child_card_ids(card).each do |id|
     crd = Trello::Card.find(id)
@@ -57,11 +57,11 @@ def process_card(card)
   end
 end
 
-def label_string(card, colour)
+def node_attributes(card, colour)
   initials = initials_for_card(card)
   assignees = initials.any? ? %[\n(#{initials.join(',')})] : ''
   str = "#{card.name}#{assignees}"
-  %{[label="#{str}", color="#{colour}"]}
+  %{[label="#{str}", URL="#{card.url}", target="_blank", color="#{colour}"]}
 end
 
 def initials_for_card(card)
