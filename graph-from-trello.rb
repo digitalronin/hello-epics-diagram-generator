@@ -9,25 +9,18 @@ require 'trello'
 
 BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 
-@attrs   = []
-@links    = {}
-@initials = {}
-
-# Depending on whether the card is in the Backlog/Doing/Done list,
-# we want the corresponding node to be red/orange/green.
-@list_colours = {
-  '5bb1e69730291b4a3e4891a4' => '{{{{ ID of backlog list }}}}',
-  '5bb1e69aaf5c8744a820ffe6' => '{{{{ ID of doing list }}}}',
-  '5bb1e69b64f1246441f6821a' => '{{{{ ID of done list }}}}'
-}
+@attrs        = []
+@links        = {}
+@initials     = {}
+@list_colours = {}
 
 def main
+  configure
   walk_the_tree
   output_graphviz_config
 end
 
 def walk_the_tree
-  configure
   [
    '{{{{ Titles of all root cards go here }}}}',
   ].each {|name| process_card get_card_by_name(name)}
@@ -84,6 +77,18 @@ def configure
     config.developer_public_key = ENV.fetch('TRELLO_API_KEY')
     config.member_token = ENV.fetch('TRELLO_MEMBER_TOKEN')
   end
+
+  board = Trello::Board.find(BOARD_ID)
+
+  backlog = board.lists.find {|l| l.name.downcase == 'backlog'}
+  doing   = board.lists.find {|l| l.name.downcase == 'doing'}
+  done    = board.lists.find {|l| l.name.downcase == 'done'}
+
+  # Depending on whether the card is in the Backlog/Doing/Done list,
+  # we want the corresponding node to be red/orange/green.
+  @list_colours[backlog.id] = 'red'
+  @list_colours[doing.id]   = 'orange'
+  @list_colours[done.id]    = 'green'
 end
 
 def get_card_by_name(name)
