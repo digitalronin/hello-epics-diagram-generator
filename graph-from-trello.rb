@@ -4,7 +4,8 @@ require 'bundler/setup'
 require 'trello'
 
 # Script to generate a graphviz file from the parent/child card relationships
-# of a [trello](https://trello.com) board that uses the [HelloEpics](https://helloepics.com/) power-up
+# of a [trello](https://trello.com) board that features the
+# [HelloEpics](https://helloepics.com/) power-up
 
 BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 
