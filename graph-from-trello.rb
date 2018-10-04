@@ -40,6 +40,8 @@ EOF
 end
 
 def process_card(card)
+  return unless card
+
   attrs = node_attributes(card, @list_colours[card.list_id])
   @attrs << %{"#{card.id}"    #{attrs}}
 
