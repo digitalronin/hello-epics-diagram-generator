@@ -9,7 +9,7 @@ require 'trello'
 
 BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 
-@attrs        = []
+@cards        = []
 @links        = {}
 @initials     = {}
 @list_colours = {}
@@ -34,7 +34,7 @@ digraph G {
 
 EOF
 
-  puts @attrs.join("\n")
+  puts @cards.join("\n")
   @links.each {|_key, tuple| puts %["#{tuple[0]}" -> "#{tuple[1]}"]}
   puts "}"
 end
@@ -43,7 +43,7 @@ def process_card(card)
   return unless card
 
   attrs = node_attributes(card, @list_colours[card.list_id])
-  @attrs << %{"#{card.id}"    #{attrs}}
+  @cards << %{"#{card.id}"    #{attrs}}
 
   child_card_ids(card).each do |id|
     crd = Trello::Card.find(id)
