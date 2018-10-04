@@ -7,8 +7,6 @@ require 'trello'
 # of a [trello](https://trello.com) board that features the
 # [HelloEpics](https://helloepics.com/) power-up
 
-BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
-
 @board        = nil
 @cards        = []
 @links        = {}
@@ -16,8 +14,8 @@ BOARD_ID = '{{{{ ID OF THE TRELLO BOARD GOES HERE }}}}'
 @list_colours = {}
 @processed    = {}
 
-def main
-  configure
+def main(board_name)
+  configure(board_name)
   walk_the_tree
   output_graphviz_config
 end
@@ -77,13 +75,13 @@ def child_card_ids(card)
     .map {|url| url.split('/').last}
 end
 
-def configure
+def configure(board_name)
   Trello.configure do |config|
     config.developer_public_key = ENV.fetch('TRELLO_API_KEY')
     config.member_token = ENV.fetch('TRELLO_MEMBER_TOKEN')
   end
 
-  @board = Trello::Board.find(BOARD_ID)
+  @board = Trello::Board.all.find {|b| b.name == board_name}
 
   backlog = @board.lists.find {|l| l.name.downcase == 'backlog'}
   doing   = @board.lists.find {|l| l.name.downcase == 'doing'}
@@ -96,8 +94,5 @@ def configure
   @list_colours[done.id]    = 'green'
 end
 
-def get_card_by_name(name)
-  Trello::Board.find(BOARD_ID).cards.detect {|card| card.name == name}
-end
-
-main
+board_name = ARGV.shift
+main(board_name)
