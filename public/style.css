@@ -2,8 +2,6 @@ body {
   font-family: Arial, Sans-serif;
 }
 
-iframe {
-  width: 100%;
-  height: 500px;
-  border: none;
+img {
+  transform: translate(-25%,-25%) scale(0.5);
 }
